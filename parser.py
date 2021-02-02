@@ -5,6 +5,7 @@ import errno
 import datetime
 import io 
 from collections import Counter
+import time
 
 
 try:
@@ -46,10 +47,42 @@ class UserHandler:
         bytes_stream.close()
 
     def create_file(self, data):
-        f = open('tasks/'+self.username+'.txt', 'w')
-        f.write(data)
-        f.close() 
+        file_path='tasks/'+self.username+'.txt'  
+        try:
+            if os.path.isfile(file_path) == True:
+                new_name_file = read_time(self.username)  
+                print(file_path,' -> ' ,new_name_file)
+                os.rename(file_path, new_name_file)
+                print('---- rename done ')
+            else: print('file doesnot exist')
+            f = open('tasks/'+self.username+'.txt', 'w')
+            print('create '+ self.username+'.txt', 'w')
+            f.write(data)
+            f.close() 
+            print(' Create DONE ')
+        except:
+            print('!@(&!)@*$&!)@&)@# -------------- EXSEPT')
+            new_name_file = read_time(self.username) 
+            os.remove(file_path)
+            os.rename(new_name_file, file_path)
+        # time.sleep(1)
+
              
+def read_time(username):
+    file_path='tasks/'+ username +'.txt'
+    check_file = os.path.isfile(file_path)
+    data_form_file = open(file_path,'r')  
+    line1, line2 = data_form_file.readline(), data_form_file.readline() 
+    params = line2.split(' ')
+    str_dt = '{data} {time}'.format(data = params[-1][:5],time =params[-2][:10])
+    print(str_dt)
+    
+    dt = datetime.datetime.strptime(str_dt, "%H:%M %d.%m.%Y")
+
+    new_name_file = 'tasks/old_{user_name}_{data}.txt'.format(user_name=username,
+    data = dt.strftime("%Y-%m-%dT%H:%M")) 
+    return new_name_file
+
 def get_tasks(user_id, tasks_data):  
     count = [] 
     for item in tasks_data: 
