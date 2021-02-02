@@ -3,8 +3,8 @@ import json
 import os
 import errno 
 import datetime
-import io 
-from collections import Counter 
+import io  
+from requests.exceptions import RequestException
 
 
 try:
@@ -96,20 +96,28 @@ def get_tasks(user_id, tasks_data):
           
 if __name__ == "__main__":   
     print('api connection') 
-    users_url = 'https://json.medrating.org/users'
-    users_request = requests.get(url=users_url)
-    users_data = users_request.json() # сохраняем от сбоев сети 
- 
-    tasks_url = 'https://json.medrating.org/todos'
-    tasks_request = requests.get(url=tasks_url)
-    tasks_data = tasks_request.json()
+    try:
+        users_url = 'https://json.medrating.org/users'
+        users_request = requests.get(url=users_url)  
+        users_data = users_request.json() # сохраняем от сбоев сети 
+    
+        tasks_url = 'https://json.medrating.org/todos'
+        tasks_request = requests.get(url=tasks_url)
+        if tasks_request.status_code == 404 or users_request.status_code == 404:
+            print("404 raise, change the settings (maybe the URLs are wrong)")
+        else:
+            print(tasks_request)
+            tasks_data = tasks_request.json()
+            for u in users_data: 
+                try:
+                    user = UserHandler(u)
+                    user.make_data()
+                    print(' ')  
+                    print('reporting...')   
+                except AttributeError: pass 
+            print('completed') 
+    except RequestException:
+        print("ConnectionError, try change settings")  
 
-    print('reporting...')   
-    for u in users_data: 
-        try:
-            user = UserHandler(u)
-            user.make_data()
-            print(' ')  
-        except AttributeError: pass
-    print('completed') 
+    
         
