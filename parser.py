@@ -4,8 +4,7 @@ import os
 import errno 
 import datetime
 import io 
-from collections import Counter
-import time
+from collections import Counter 
 
 
 try:
@@ -61,11 +60,11 @@ class UserHandler:
             f.close() 
             print(' Create DONE ')
         except:
+            # return state 
             print('!@(&!)@*$&!)@&)@# -------------- EXSEPT')
             new_name_file = read_time(self.username) 
             os.remove(file_path)
-            os.rename(new_name_file, file_path)
-        # time.sleep(1)
+            os.rename(new_name_file, file_path) 
 
              
 def read_time(username):
@@ -110,7 +109,7 @@ if __name__ == "__main__":
         try:
             user = UserHandler(u)
             user.make_data()
-            
+            print(' ')  
         except AttributeError: pass
     print('completed') 
         
