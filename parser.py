@@ -15,7 +15,7 @@ except OSError as e:
         raise
 
 class UserHandler:
-    def __init__( self, dict ):
+    def __init__(self, dict):
         vars(self).update( dict )  
 
     def make_data(self):
@@ -58,21 +58,17 @@ class UserHandler:
         try:
             if os.path.isfile(file_path) == True:
                 new_name_file = read_time(self.username)  
-                print(file_path,' -> ' ,new_name_file)
+                print(file_path, ' -> ' ,new_name_file)
                 os.rename(file_path, new_name_file)
                 print('---- rename done ')
             else: print('file does not exist')
-            f = open('tasks/'+self.username+'.txt', 'w')
-            print('create '+ self.username+'.txt', 'w')
+            f = open('tasks/' + self.username + '.txt', 'w')
+            print('create ' + self.username+'.txt', 'w')
             f.write(data)
             f.close() 
             print(' Create DONE ')
-        except:
-            # return state 
-            print(f'!!! error while creating {file_path} !!!')
-            # new_name_file = read_time(self.username) 
-            # os.remove(file_path)
-            # os.rename(new_name_file, file_path) 
+        except: 
+            print(f'!!! error while creating {file_path} !!!') 
 
              
 def read_time(username):
