@@ -4,3 +4,4 @@ env/
 workspace.code-workspace
 data/
 .vscode
+test/
