@@ -81,21 +81,24 @@ def read_time(username):
     try:
         data_form_file = open(file_path,'r')  
         line1, line2 = data_form_file.readline(), data_form_file.readline() 
+        data_form_file.close()
+        
         params = line2.split(' ')
         str_dt = '{data} {time}'.format(data = params[-1][:5],
             time =params[-2][:10]) 
-        
+         
         dt = datetime.datetime.strptime(str_dt, "%H:%M %d.%m.%Y")
-
         new_name_file = 'tasks/old_{user_name}_{data}.txt'.format(user_name=username,
             data = dt.strftime("%Y-%m-%dT%H:%M")) 
-        return new_name_file
+        return new_name_file   
 
     except ValueError: 
         print("!!! date is not readable, setting new date (now)") 
 
         data_form_file = open(file_path,'r')  
         line1, line2 = data_form_file.readline(), data_form_file.readline() 
+        data_form_file.close()
+
         params = line2.split(' ')
         str_dt = '{data} {time}'.format(data = params[-1][:5],
             time =params[-2][:10])
