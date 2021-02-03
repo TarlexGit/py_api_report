@@ -1,9 +1,10 @@
-import requests
+import datetime
+import errno
+import io
 import json
 import os
-import errno 
-import datetime
-import io  
+
+import requests
 from requests.exceptions import RequestException
 
 
@@ -25,21 +26,28 @@ class UserHandler:
         str_email = self.email
         today = datetime.datetime.now()
         str_date_time = today.strftime("%d.%m.%Y %H:%M")
-
-        bytes_stream.write("Отчёт для {company}.\n".format(company=str_company["name"]))
-        bytes_stream.write("{name} <{email}> {date}\n".format(name=str_name, email = str_email, date=str_date_time))
         
+        
+        bytes_stream.write("Отчёт для {company}.\n{name} <{email}> {date}\n".format(
+            company=str_company["name"],
+            name=str_name, 
+            email = str_email, 
+            date=str_date_time)) 
+
         all_tasks_values = get_tasks(user.id, tasks_data)
-        compile_tasks = [x['title'] for x in all_tasks_values if x['completed'] == True] 
-        not_compile_tasks = [x['title'] for x in all_tasks_values if x['completed'] == False] 
+        completed_tasks = [x['title'] for x in all_tasks_values if x['completed'] == True] 
+        not_completed_tasks = [x['title'] for x in all_tasks_values if x['completed'] == False] 
         
-        bytes_stream.write("Всего задач: {done}\n\nЗавершённые задачи ({comp}):\n".format(done=len(all_tasks_values), comp=len(compile_tasks)))
-        compile_tasks_list=[f'{x}\n' for x in compile_tasks]
-        bytes_stream.write("".join(map(str, compile_tasks_list)))
+        bytes_stream.write("Всего задач: {done}\n\nЗавершённые задачи ({comp}):\n".format(
+            done=len(all_tasks_values), 
+            comp=len(completed_tasks)))
+        
+        completed_tasks_list=[f'{x}\n' for x in completed_tasks]
+        bytes_stream.write("".join(map(str, completed_tasks_list)))
 
-        not_compile_tasks_list=[f'{x}\n' for x in not_compile_tasks]
-        z="".join(map(str, not_compile_tasks_list))
-        bytes_stream.write("\nОставшиеся задачи ({x}):\n{z}".format(x=len(not_compile_tasks), z=z))
+        not_completed_tasks_list=[f'{x}\n' for x in not_completed_tasks]
+        z="".join(map(str, not_completed_tasks_list))
+        bytes_stream.write("\nОставшиеся задачи ({x}):\n{z}".format(x=len(not_completed_tasks), z=z))
 
         self.create_file(bytes_stream.getvalue())
         
@@ -53,7 +61,7 @@ class UserHandler:
                 print(file_path,' -> ' ,new_name_file)
                 os.rename(file_path, new_name_file)
                 print('---- rename done ')
-            else: print('file doesnot exist')
+            else: print('file does not exist')
             f = open('tasks/'+self.username+'.txt', 'w')
             print('create '+ self.username+'.txt', 'w')
             f.write(data)

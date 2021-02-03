@@ -1,4 +1,6 @@
 task.txt
-tasks/*
+tasks/
 env/
 workspace.code-workspace
+data/
+.vscode
