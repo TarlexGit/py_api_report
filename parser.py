@@ -112,10 +112,9 @@ def get_tasks(user_id, tasks_data):
     count = [] 
     for item in tasks_data: 
         try:
-            for key, value in item.items():
-                if item['userId']==user_id and item not in count: 
-                    count.append(item)  
-                else:pass 
+            if item['userId']==user_id and item not in count: 
+                count.append(item)  
+            else:pass 
         except:pass 
     return count
 
@@ -130,7 +129,7 @@ if __name__ == "__main__":
         tasks_url = 'https://json.medrating.org/todos'
         tasks_request = requests.get(url=tasks_url)
         if tasks_request.status_code == 404 or users_request.status_code == 404:
-            print("404 raise, change the settings (maybe the URLs are wrong)")
+            print("404, change the settings (maybe the URLs are wrong)")
         else:
             print(tasks_request)
             tasks_data = tasks_request.json()
