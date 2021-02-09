@@ -73,10 +73,11 @@ class UserHandler:
              
 def read_time(username):
     file_path='tasks/'+ username +'.txt'
-    check_file = os.path.isfile(file_path)
+
     try:
         data_form_file = open(file_path,'r')  
-        line1, line2 = data_form_file.readline(), data_form_file.readline() 
+        data_form_file.readline() 
+        line2 = data_form_file.readline()
         data_form_file.close()
         
         params = line2.split(' ')
@@ -91,9 +92,10 @@ def read_time(username):
     except ValueError: 
         print("!!! date is not readable, setting new date (now)") 
 
-        data_form_file = open(file_path,'r')  
-        line1, line2 = data_form_file.readline(), data_form_file.readline() 
-        data_form_file.close()
+        date_form_file = open(file_path,'r')  
+        date_form_file.readline() 
+        line2 = date_form_file.readline() 
+        date_form_file.close()
 
         params = line2.split(' ')
         str_dt = '{data} {time}'.format(data = params[-1][:5],
@@ -127,11 +129,11 @@ if __name__ == "__main__":
     
         tasks_url = 'https://json.medrating.org/todos'
         tasks_request = requests.get(url=tasks_url)
+        tasks_data = tasks_request.json()
+
         if tasks_request.status_code == 404 or users_request.status_code == 404:
             print("404, change the settings (maybe the URLs are wrong)")
-        else:
-            print(tasks_request)
-            tasks_data = tasks_request.json()
+        else:  
             for u in users_data: 
                 try:
                     user = UserHandler(u)

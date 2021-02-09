@@ -5,3 +5,5 @@ workspace.code-workspace
 data/
 .vscode
 test/
+__pycache__
+test.py
